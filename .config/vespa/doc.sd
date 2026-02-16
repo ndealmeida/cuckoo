@@ -1,0 +1,26 @@
+schema doc {
+    document doc {
+        field id type int {
+            indexing: summary
+        }
+        field title type string {
+            indexing: index | summary
+        }
+        field body type string {
+            indexing: index | summary
+        }
+        field embedding type tensor<float>(x[384]) {
+            indexing: attribute | index | summary
+            index: hnsw
+        }
+    }
+
+    rank-profile default {
+        inputs {
+            query(q_vector) tensor<float>(x[384])
+        }
+        first-phase {
+            expression: closeness(field, embedding)
+        }
+    }
+}
