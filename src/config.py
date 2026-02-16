@@ -21,13 +21,18 @@ class DatabaseConfig:
 class ElasticsearchConfig:
     host: str
     port: int
+    index_name: str
+    mappings_path: str
+    mapping_file: str
 
 
 @dataclass
 class VespaConfig:
     host: str
     port: int
-    config_url: str
+    config_port: int
+    schema_path: str
+    schema_file: str
 
 
 @dataclass
@@ -39,12 +44,14 @@ class EmbeddingConfig:
 @singleton
 @dataclass
 class Config:
+    app_name: str
     database: DatabaseConfig
     elasticsearch: ElasticsearchConfig
     vespa: VespaConfig
     embedding: EmbeddingConfig
 
     def __init__(self):
+        self.app_name = settings.app_name
         self.database = DatabaseConfig(**settings.database)
         self.elasticsearch = ElasticsearchConfig(**settings.elasticsearch)
         self.vespa = VespaConfig(**settings.vespa)

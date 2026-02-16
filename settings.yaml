@@ -1,3 +1,5 @@
+app_name: cuckoo
+
 database:
   host: localhost
   port: 5432
@@ -6,11 +8,16 @@ database:
 elasticsearch:
   host: localhost
   port: 9200
+  index_name: cuckoo_index
+  mappings_path: .config/elasticsearch
+  mapping_file: mappings.json
 
 vespa:
   host: localhost
   port: 8080
-  config_url: http://localhost:19071
+  config_port: 19071
+  schema_path: .config/vespa
+  schema_file: doc.sd
 
 embedding:
   model_name: all-MiniLM-L6-v2

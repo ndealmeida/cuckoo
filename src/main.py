@@ -14,13 +14,11 @@ def main():
     logger.info("Powering up Cuckoo...")
     container = Injector()
 
-    # 1. Start Indexation
     indexer = container.get(Indexer)
     indexer.run_all()
 
-    # 2. Call for Reports
     reporter = container.get(SearchReporter)
-    reporter.run_comparison("engineering")
+    reporter.run_comparison("how to build AI systems")
 
 
 if __name__ == "__main__":
