@@ -33,6 +33,7 @@ class VespaConfig:
 @dataclass
 class EmbeddingConfig:
     model_name: str
+    cache_folder: str
 
 
 @singleton

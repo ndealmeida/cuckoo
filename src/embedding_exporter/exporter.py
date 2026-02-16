@@ -14,8 +14,8 @@ class EmbeddingExporter:
     @inject
     def __init__(self, config: Config):
         model_name = config.embedding.model_name
-        logger.info(f"Initializing EmbeddingExporter with model: {model_name}")
-        self.model = SentenceTransformer(model_name)
+        cache_folder = config.embedding.cache_folder
+        self.model = SentenceTransformer(model_name, cache_folder=cache_folder)
         self.dimension = self.model.get_sentence_embedding_dimension()
 
     def encode(self, text: str) -> List[float]:

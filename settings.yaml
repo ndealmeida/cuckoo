@@ -14,3 +14,4 @@ vespa:
 
 embedding:
   model_name: all-MiniLM-L6-v2
+  cache_folder: ./.cache/models
