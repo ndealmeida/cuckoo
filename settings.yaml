@@ -11,3 +11,6 @@ vespa:
   host: localhost
   port: 8080
   config_url: http://localhost:19071
+
+embedding:
+  model_name: all-MiniLM-L6-v2

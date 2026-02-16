@@ -30,14 +30,21 @@ class VespaConfig:
     config_url: str
 
 
+@dataclass
+class EmbeddingConfig:
+    model_name: str
+
+
 @singleton
 @dataclass
 class Config:
     database: DatabaseConfig
     elasticsearch: ElasticsearchConfig
     vespa: VespaConfig
+    embedding: EmbeddingConfig
 
     def __init__(self):
         self.database = DatabaseConfig(**settings.database)
         self.elasticsearch = ElasticsearchConfig(**settings.elasticsearch)
         self.vespa = VespaConfig(**settings.vespa)
+        self.embedding = EmbeddingConfig(**settings.embedding)
