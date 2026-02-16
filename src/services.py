@@ -25,7 +25,7 @@ class ElasticsearchService:
 
     def get_client(self) -> Elasticsearch:
         if self.client is None:
-            self.client = Elasticsearch(f"http:{self.host}:{self.port}")
+            self.client = Elasticsearch(f"http://{self.host}:{self.port}")
         return self.client
 
     def test_connection(self) -> bool:
@@ -58,5 +58,5 @@ class VespaService:
 
     def get_app(self) -> Vespa:
         if self.app is None:
-            self.app = Vespa(url=f"http:{self.host}:{self.port}")
+            self.app = Vespa(url=f"http://{self.host}:{self.port}")
         return self.app
