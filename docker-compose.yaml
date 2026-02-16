@@ -1,14 +1,59 @@
 services:
+  vespa:
+    image: vespaengine/vespa
+    platform: linux/arm64
+    container_name: vespa
+    hostname: vespa
+    environment:
+      - VESPA_IGNORE_NOT_ENOUGH_MEMORY=true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ApplicationStatus"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "8080:8080"
+      - "19071:19071"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.18.1
+    platform: linux/arm64
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health | grep -vq '\"status\":\"red\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.18.1
+    platform: linux/arm64
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
   postgres:
     image: postgres:18.1-alpine
+    platform: linux/arm64
     command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
     container_name: db
     environment:
       - POSTGRES_USER=cuckoodev
       - POSTGRES_DB=cuckoo
-      - POSTGRES_HOST_AUTH_METHOD=s3kr3t
+      - POSTGRES_HOST_AUTH_METHOD=trust
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U boldev"]
+      test: ["CMD-SHELL", "pg_isready -d cuckoo -U cuckoodev"]
       interval: 10s
       timeout: 5s
       retries: 5

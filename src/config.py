@@ -15,13 +15,29 @@ class DatabaseConfig:
     host: str
     port: int
     user: str
-    password: str
+
+
+@dataclass
+class ElasticsearchConfig:
+    host: str
+    port: int
+
+
+@dataclass
+class VespaConfig:
+    host: str
+    port: int
+    config_url: str
 
 
 @singleton
 @dataclass
 class Config:
     database: DatabaseConfig
+    elasticsearch: ElasticsearchConfig
+    vespa: VespaConfig
 
     def __init__(self):
         self.database = DatabaseConfig(**settings.database)
+        self.elasticsearch = ElasticsearchConfig(**settings.elasticsearch)
+        self.vespa = VespaConfig(**settings.vespa)
