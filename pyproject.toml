@@ -9,6 +9,7 @@ dependencies = [
     "dynaconf>=3.2.12",
     "elasticsearch>=8.17.0,<9.0.0",
     "fastapi>=0.128.8",
+    "httpx>=0.27.0",
     "injector>=0.24.0",
     "pyvespa>=0.49.0",
     "redis>=7.1.1",
@@ -20,6 +21,7 @@ dependencies = [
 
 [project.scripts]
 cuckoo = "src.main:main"
+deploy-vespa = "scripts.deploy_vespa:deploy"
 
 [build-system]
 requires = ["hatchling"]

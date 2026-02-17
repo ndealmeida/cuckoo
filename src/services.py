@@ -6,7 +6,6 @@ from elasticsearch import Elasticsearch
 from injector import inject, singleton
 from vespa.application import Vespa
 from vespa.deployment import VespaDocker
-from vespa.package import ApplicationPackage
 
 from src.config import Config
 
@@ -29,8 +28,7 @@ class ElasticsearchService:
     def test_connection(self) -> bool:
         try:
             return self.get_client().ping()
-        except Exception as e:
-            logger.error(f"Elasticsearch ping failed: {e}")
+        except Exception:
             return False
 
 
@@ -39,22 +37,30 @@ class VespaService:
     @inject
     def __init__(self, config: Config):
         self.config = config.vespa
+        self.app_name = config.app_name
         self.app: Optional[Vespa] = None
-
-    def deploy_sample_app(self, app_package: ApplicationPackage) -> Vespa:
-        client = docker.from_env()
-        try:
-            container = client.containers.get("vespa")
-            vespa_docker = VespaDocker(
-                container=container, port=self.config.port, cfgsrv_port=self.config.config_port
-            )
-            self.app = vespa_docker.deploy(application_package=app_package)
-            return self.app
-        except Exception as e:
-            logger.error(f"Vespa deployment failed: {e}")
-            raise e
 
     def get_app(self) -> Vespa:
         if self.app is None:
             self.app = Vespa(url=f"http://{self.config.host}", port=self.config.port)
+        return self.app
+
+    def test_connection(self) -> bool:
+        try:
+            import httpx
+
+            response = httpx.get(f"http://{self.config.host}:{self.config.port}", timeout=2)
+            return response.status_code == 200
+        except Exception:
+            return False
+
+    def deploy_from_disk(self) -> Vespa:
+        client = docker.from_env()
+        container = client.containers.get("vespa")
+        vespa_docker = VespaDocker(
+            container=container, port=self.config.port, cfgsrv_port=self.config.config_port
+        )
+        self.app = vespa_docker.deploy_from_disk(
+            application_name=self.app_name, application_root=self.config.schema_path
+        )
         return self.app

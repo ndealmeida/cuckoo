@@ -1,6 +1,5 @@
 from typing import Any, Dict, List
 
-# Generic data format
 SAMPLE_DOCUMENTS: List[Dict[str, Any]] = [
     {
         "id": 1,

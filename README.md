@@ -6,7 +6,7 @@ Cuckoo is my playground for exploring the intersection of **Search Engineering**
 - [x] Basic Search Infrastructure (Docker, Healthchecks)
 - [x] Dependency Injection & Service Architecture
 - [x] Keyword Search Comparison (Elasticsearch vs. Vespa)
-- [ ] **Semantic Search (Vector Search)** - *In Progress*
+- [x] Semantic Search (Vector Search)
 - [ ] Hybrid Search (BM25 + Dense Vectors)
 - [ ] Custom Ranking with ML Models
 
@@ -19,14 +19,25 @@ Cuckoo is my playground for exploring the intersection of **Search Engineering**
 
 ## 🏃 Getting Started
 
-Note: please provide at least 4Gb for containers to work properly.
+1. Initialize search infrastructure (requirement: 4GB+ of memory)
 
-1. **Spin up the engines:**
-   ```bash
-   docker compose up -d
-   ```
+```bash
+docker compose up -d
+```
 
-2. **Run the comparison:**
-   ```bash
-   uv run cuckoo
-   ```
+2. Deploy Vespa mappings (see more [here](docs/04_Vespa_Schemas_vs_ES_Mappings.md))
+
+```bash
+uv run deploy-vespa
+```
+
+3. Run Cuckoo:
+
+```bash
+uv run cuckoo
+```
+
+## API
+
+1. Trigger `POST /index` to run indexation (currently it reads from mock data in data.py)
+2. Search with `GET /search` endpoint

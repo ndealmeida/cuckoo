@@ -15,7 +15,11 @@ schema doc {
         }
     }
 
-    rank-profile default {
+    fieldset default {
+        fields: title, body
+    }
+
+    rank-profile semantic {
         inputs {
             query(q_vector) tensor<float>(x[384])
         }
