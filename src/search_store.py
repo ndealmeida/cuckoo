@@ -66,10 +66,10 @@ class SearchStore:
         app = self.vespa_service.get_app()
         if search_type == SearchType.LEXICAL:
             query_body = {
-                "yql": 'select * from sources * where userQuery();',
+                "yql": "select * from sources * where userQuery();",
                 "query": query_text,
                 "type": "any",  # Behave like Elasticsearch (OR)
-                "ranking": "default" # Use Vespa's built-in BM25
+                "ranking": "default",  # Use Vespa's built-in BM25
             }
         else:
             query_vector = self.embedding_exporter.encode(query_text)
@@ -80,7 +80,7 @@ class SearchStore:
                     where {targetHits:3}nearestNeighbor(embedding, q_vector);
                 """,
                 "input.query(q_vector)": query_vector,
-                "ranking": "semantic" # Use our custom closeness rank profile
+                "ranking": "semantic",  # Use our custom closeness rank profile
             }
         res = app.query(body=query_body)
         return [{"score": hit["relevance"], "title": hit["fields"]["title"]} for hit in res.hits]

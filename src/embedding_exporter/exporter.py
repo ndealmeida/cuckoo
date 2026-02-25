@@ -28,9 +28,7 @@ class EmbeddingExporter:
 
         try:
             self.model = SentenceTransformer(
-                model_name,
-                cache_folder=cache_folder,
-                local_files_only=local_files_only
+                model_name, cache_folder=cache_folder, local_files_only=local_files_only
             )
         except Exception:
             # Fallback to online if local load fails
